@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { authenticate, allowRoles } from "../middleware/auth.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import * as c from "../controllers/orderController.js";
+const r = Router(); r.use(authenticate);
+r.post("/redeem/:productId", allowRoles("household"), asyncHandler(c.redeem));
+r.get("/household", allowRoles("household"), asyncHandler(c.householdOrders));
+r.get("/organisation", allowRoles("organisation"), asyncHandler(c.organisationOrders));
+r.patch("/:id/status", allowRoles("organisation"), asyncHandler(c.updateOrderStatus));
+r.post("/:id/received", allowRoles("household"), asyncHandler(c.confirmReceived));
+export default r;

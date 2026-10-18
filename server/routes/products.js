@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { authenticate, allowRoles } from "../middleware/auth.js";
+import { uploadImages } from "../middleware/upload.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import * as c from "../controllers/productController.js";
+const r = Router();
+r.get("/", asyncHandler(c.listProducts));
+r.use(authenticate, allowRoles("organisation"));
+r.get("/mine", asyncHandler(c.myProducts));
+r.post("/", uploadImages, asyncHandler(c.createProduct));
+r.put("/:id", uploadImages, asyncHandler(c.updateProduct));
+r.delete("/:id", asyncHandler(c.deleteProduct));
+export default r;
